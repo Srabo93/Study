@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "activities"
+name = "Rust"
 version = "0.1.0"
