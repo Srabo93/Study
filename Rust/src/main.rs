@@ -49,6 +49,9 @@ impl Bills {
 
         return bills;
     }
+    fn remove_bill(&mut self, name: &str) -> bool {
+        self.list.remove(name).is_some()
+    }
 }
 
 struct Menu;
@@ -84,6 +87,16 @@ impl Menu {
         for bill in bills.view_bill() {
             println!("{:?}", bill);
         }
+    }
+    fn remove_bill_menu(bills: &mut Bills) {
+        println!("Bill name:");
+        let name = match get_input() {
+            Some(input) => input,
+            None => return,
+        };
+
+        bills.remove_bill(&name);
+        println!("Bill removed");
     }
 }
 
@@ -132,6 +145,7 @@ fn main_menu() {
         match input.as_str() {
             "1" => Menu::add_bill_menu(&mut bills),
             "2" => Menu::view_bill_menu(&bills),
+            "3" => Menu::remove_bill_menu(&mut bills),
             _ => break,
         }
     }
