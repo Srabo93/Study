@@ -37,10 +37,10 @@ impl Bills {
             list: HashMap::new(),
         }
     }
-    fn add(&mut self, bill: Bill) {
+    fn add_bill(&mut self, bill: Bill) {
         self.list.insert(bill.name.clone(), bill);
     }
-    fn view(&self) -> Vec<&Bill> {
+    fn view_bill(&self) -> Vec<&Bill> {
         let mut bills = vec![];
 
         for bill in self.list.values() {
@@ -53,7 +53,7 @@ impl Bills {
 
 struct Menu;
 impl Menu {
-    fn show() {
+    fn show_menu() {
         println!("");
         println!("== Manage Bills ==");
         println!("1. Add bill");
@@ -64,7 +64,7 @@ impl Menu {
         println!("");
         println!("Enter selection:");
     }
-    fn add_bill(bills: &mut Bills) {
+    fn add_bill_menu(bills: &mut Bills) {
         println!("Bill name:");
         let name = match get_input() {
             Some(input) => input,
@@ -77,11 +77,11 @@ impl Menu {
         };
 
         let bill = Bill { name, amount };
-        bills.add(bill);
+        bills.add_bill(bill);
         println!("Bill added")
     }
-    fn view_bills(bills: &Bills) {
-        for bill in bills.view() {
+    fn view_bill_menu(bills: &Bills) {
+        for bill in bills.view_bill() {
             println!("{:?}", bill);
         }
     }
@@ -122,7 +122,7 @@ fn main_menu() {
     let mut bills = Bills::new();
 
     loop {
-        Menu::show();
+        Menu::show_menu();
 
         let input = match get_input() {
             Some(input) => input,
@@ -130,8 +130,8 @@ fn main_menu() {
         };
 
         match input.as_str() {
-            "1" => Menu::add_bill(&mut bills),
-            "2" => Menu::view_bills(&bills),
+            "1" => Menu::add_bill_menu(&mut bills),
+            "2" => Menu::view_bill_menu(&bills),
             _ => break,
         }
     }
