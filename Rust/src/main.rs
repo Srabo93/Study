@@ -52,6 +52,15 @@ impl Bills {
     fn remove_bill(&mut self, name: &str) -> bool {
         self.list.remove(name).is_some()
     }
+    fn update_bill(&mut self, name: &str, amount: f64) -> bool {
+        match self.list.get_mut(name) {
+            Some(bill) => {
+                bill.amount = amount;
+                true
+            }
+            None => false,
+        }
+    }
 }
 
 struct Menu;
@@ -97,6 +106,35 @@ impl Menu {
 
         bills.remove_bill(&name);
         println!("Bill removed");
+    }
+    fn update_bill_menu(bills: &mut Bills) {
+        for bill in bills.view_bill() {
+            println!("{:?}", bill);
+        }
+
+        println!("Enter bill to update:");
+        let name = match get_input() {
+            Some(input) => input,
+            None => return,
+        };
+
+        let amount = match get_bill_amount() {
+            Some(amount) => amount,
+            None => return,
+        };
+
+        if bills.update_bill(&name, amount) {
+            println!("updated bill");
+        } else {
+            println!("bill not found");
+        }
+    }
+    fn total_bill_menu(bills: &Bills) {
+        let all_bills = bills.view_bill();
+        println!(
+            "Bill total: {}",
+            all_bills.iter().map(|bill| bill.amount).sum::<f64>()
+        );
     }
 }
 
@@ -146,6 +184,8 @@ fn main_menu() {
             "1" => Menu::add_bill_menu(&mut bills),
             "2" => Menu::view_bill_menu(&bills),
             "3" => Menu::remove_bill_menu(&mut bills),
+            "4" => Menu::update_bill_menu(&mut bills),
+            "5" => Menu::total_bill_menu(&bills),
             _ => break,
         }
     }
