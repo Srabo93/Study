@@ -18,8 +18,6 @@ unsigned int hash(const char *key) {
   for (int i = 0; key[i] != '\0'; i++) {
     hash = (hash * 31) + key[i];
   }
-  printf("hash done before modulo: %i\n", hash);
-  printf("hash after loop: %i\n", hash % HASHMAP_SIZE);
   return hash % HASHMAP_SIZE;
 }
 
