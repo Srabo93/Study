@@ -15,7 +15,7 @@ void menu() {
   printf("5. Update bill\n");
   printf("6. Exit\n");
   printf(" \n");
-  printf("Enter selection:");
+  printf("Enter selection:\n");
 }
 
 void view_bill_menu(const HashMap *map) {
@@ -31,6 +31,9 @@ void view_bill_menu(const HashMap *map) {
 
     if (inputStep == 1) {
       int amount = hashmap_lookup(map, name);
+      if (amount == -1) {
+        break;
+      }
       printf("%s has to pay: %i\n", name, amount);
       break;
     }

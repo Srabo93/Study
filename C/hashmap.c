@@ -46,6 +46,11 @@ void hashmap_remove(HashMap *map, const char *key) {
   HashMapNode *curr_node = map->buckets[index];
   HashMapNode *prev = NULL;
 
+  if (!curr_node) {
+    printf("No entry found");
+    return;
+  }
+
   while (curr_node != NULL) {
     if (strcmp(curr_node->key, key) == 0) {
       if (prev == NULL) {
@@ -56,6 +61,7 @@ void hashmap_remove(HashMap *map, const char *key) {
 
       free(curr_node->key);
       free(curr_node);
+      printf("Node succesfully removed");
       return;
     }
   }
@@ -67,6 +73,12 @@ int hashmap_update(const HashMap *map, const char *key, int value) {
   unsigned int index = hash(key);
 
   HashMapNode *curr_node = map->buckets[index];
+
+  if (!curr_node) {
+    printf("No Entry found");
+    return -1;
+  }
+
   while (curr_node != NULL) {
     if (strcmp(curr_node->key, key) == 0) {
       curr_node->value = value;
