@@ -13,18 +13,16 @@ void menu() {
   printf("3. View bills\n");
   printf("4. Remove bill\n");
   printf("5. Update bill\n");
+  printf("6. Exit\n");
   printf(" \n");
   printf("Enter selection:");
 }
 
-void view_bill_menu() {}
-
-void add_bill_menu(HashMap *map) {
+void view_bill_menu(const HashMap *map) {
   char name[100];
-  int amount;
   for (;;) {
     int inputStep = 0;
-    printf("Add Name: ");
+    printf("Enter Bill Name: \n");
     scanf(" %[^\n]", name);
     if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
       break;
@@ -32,7 +30,70 @@ void add_bill_menu(HashMap *map) {
     inputStep++;
 
     if (inputStep == 1) {
-      printf("Add Amount: ");
+      int amount = hashmap_lookup(map, name);
+      printf("%s has to pay: %i\n", name, amount);
+      break;
+    }
+  }
+}
+
+void remove_bill_menu(HashMap *map) {
+  char name[100];
+  for (;;) {
+    int inputStep = 0;
+    printf("Enter Bill Name, that should be removed: \n");
+    scanf(" %[^\n]", name);
+    if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
+      break;
+    }
+    inputStep++;
+
+    if (inputStep == 1) {
+      hashmap_remove(map, name);
+      break;
+    }
+  }
+}
+
+void update_bill_menu(HashMap *map) {
+  char name[100];
+  int amount;
+  for (;;) {
+    int inputStep = 0;
+    printf("Enter Name: \n");
+    scanf(" %[^\n]", name);
+    if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
+      break;
+    }
+    inputStep++;
+
+    if (inputStep == 1) {
+      printf("Enter Amount: \n");
+      scanf("%i", &amount);
+      inputStep++;
+    }
+
+    if (inputStep == 2) {
+      hashmap_update(map, name, amount);
+      break;
+    }
+  }
+}
+
+void add_bill_menu(HashMap *map) {
+  char name[100];
+  int amount;
+  for (;;) {
+    int inputStep = 0;
+    printf("Add Name: \n");
+    scanf(" %[^\n]", name);
+    if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
+      break;
+    }
+    inputStep++;
+
+    if (inputStep == 1) {
+      printf("Add Amount: \n");
       scanf("%i", &amount);
       inputStep++;
     }
@@ -50,6 +111,7 @@ typedef enum {
   VIEW_BILLS = 3,
   REMOVE_BILL = 4,
   UPDATE_BILL = 5,
+  EXIT = 6
 } BillAction;
 
 int main(int argc, char *argv[]) {
@@ -68,18 +130,30 @@ int main(int argc, char *argv[]) {
       return -1;
     }
 
+    if (user_input == EXIT) {
+      printf("Bye\n");
+      break;
+    }
+
     switch (user_input) {
     case ADD_BILL:
       add_bill_menu(&map);
       break;
     case VIEW_BILL:
-      view_bill_menu();
-
+      view_bill_menu(&map);
+      break;
+    case VIEW_BILLS:
+      hashmap_print(&map);
+      break;
+    case REMOVE_BILL:
+      remove_bill_menu(&map);
+      break;
+    case UPDATE_BILL:
+      update_bill_menu(&map);
+      break;
     default:
       break;
     }
   }
-
-  hashmap_print(&map);
   hashmap_destroy(&map);
 }
