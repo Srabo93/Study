@@ -23,9 +23,15 @@ void view_bill_menu(const HashMap *map) {
     int inputStep = 0;
     printf("Enter Bill Name: \n");
     scanf(" %[^\n]", name);
+
     if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
       break;
     }
+
+    for (int i = 0; name[i] != '\0'; i++) {
+      name[i] = tolower(name[i]);
+    }
+
     inputStep++;
 
     if (inputStep == 1) {
@@ -45,9 +51,15 @@ void remove_bill_menu(HashMap *map) {
     int inputStep = 0;
     printf("Enter Bill Name, that should be removed: \n");
     scanf(" %[^\n]", name);
+
     if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
       break;
     }
+
+    for (int i = 0; name[i] != '\0'; i++) {
+      name[i] = tolower(name[i]);
+    }
+
     inputStep++;
 
     if (inputStep == 1) {
@@ -64,9 +76,15 @@ void update_bill_menu(HashMap *map) {
     int inputStep = 0;
     printf("Enter Name: \n");
     scanf(" %[^\n]", name);
+
     if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
       break;
     }
+
+    for (int i = 0; name[i] != '\0'; i++) {
+      name[i] = tolower(name[i]);
+    }
+
     inputStep++;
 
     if (inputStep == 1) {
@@ -88,6 +106,7 @@ void add_bill_menu(HashMap *map) {
     int inputStep = 0;
     printf("Add Name: \n");
     scanf(" %[^\n]", name);
+
     if (strcasecmp(name, "") == 0 || strcasecmp(name, " ") == 0) {
       break;
     }
