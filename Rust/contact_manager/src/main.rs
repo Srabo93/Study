@@ -41,6 +41,15 @@ impl Records {
             None => 1,
         }
     }
+    fn search(&self, name: &str) -> Vec<&Record> {
+        self.list
+            .values()
+            .filter(|rec| rec.name.to_lowercase().contains(&name.to_lowercase()))
+            .collect()
+    }
+    fn remove(&mut self, id: i64) -> Option<Record> {
+        self.list.remove(&id)
+    }
 }
 
 #[derive(Error, Debug)]
@@ -140,10 +149,27 @@ enum Command {
         #[structopt(short)]
         email: Option<String>,
     },
+    Search {
+        query: String,
+    },
+    Remove {
+        id: i64,
+    },
 }
 
 fn run(opt: Opt) -> Result<(), std::io::Error> {
     match opt.cmd {
+        Command::Search { query } => {
+            let recs = load_records(opt.data_file, opt.verbose)?;
+            let results = recs.search(&query);
+            if results.is_empty() {
+                println!("no records found!")
+            } else {
+                for rec in results {
+                    println!("{:?}", rec)
+                }
+            }
+        }
         Command::Add { name, email } => {
             let mut recs = load_records(opt.data_file.clone(), opt.verbose)?;
             let next_id = recs.next_id();
@@ -158,6 +184,15 @@ fn run(opt: Opt) -> Result<(), std::io::Error> {
             let recs = load_records(opt.data_file, opt.verbose)?;
             for record in recs.into_vec() {
                 println!("{:?}", record);
+            }
+        }
+        Command::Remove { id } => {
+            let mut recs = load_records(opt.data_file.clone(), opt.verbose)?;
+            if recs.remove(id).is_some() {
+                save_records(opt.data_file, recs)?;
+                println!("record deleted");
+            } else {
+                println!("record not found")
             }
         }
     }
