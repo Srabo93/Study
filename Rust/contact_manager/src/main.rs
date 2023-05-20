@@ -50,6 +50,16 @@ impl Records {
     fn remove(&mut self, id: i64) -> Option<Record> {
         self.list.remove(&id)
     }
+    fn edit(&mut self, id: i64, name: &str, email: Option<String>) {
+        self.list.insert(
+            id,
+            Record {
+                id,
+                name: name.to_string(),
+                email,
+            },
+        );
+    }
 }
 
 #[derive(Error, Debug)]
@@ -155,6 +165,11 @@ enum Command {
     Remove {
         id: i64,
     },
+    Update {
+        id: i64,
+        name: String,
+        email: Option<String>,
+    },
 }
 
 fn run(opt: Opt) -> Result<(), std::io::Error> {
@@ -194,6 +209,11 @@ fn run(opt: Opt) -> Result<(), std::io::Error> {
             } else {
                 println!("record not found")
             }
+        }
+        Command::Update { id, name, email } => {
+            let mut recs = load_records(opt.data_file.clone(), opt.verbose)?;
+            recs.edit(id, &name, email);
+            save_records(opt.data_file, recs)?;
         }
     }
     Ok(())
