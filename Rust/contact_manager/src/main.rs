@@ -1,4 +1,9 @@
-use std::{collections::HashMap, fs::File, io::Read, path::PathBuf};
+use std::{
+    collections::HashMap,
+    fs::{File, OpenOptions},
+    io::{Read, Write},
+    path::PathBuf,
+};
 use structopt::StructOpt;
 use thiserror::Error;
 
@@ -19,13 +24,22 @@ impl Records {
             list: HashMap::new(),
         }
     }
-    pub fn add(&mut self, record: Record) {
+    fn add(&mut self, record: Record) {
         self.list.insert(record.id, record);
     }
-    pub fn into_vec(mut self) -> Vec<Record> {
+    fn into_vec(mut self) -> Vec<Record> {
         let mut records: Vec<_> = self.list.drain().map(|kv| kv.1).collect();
         records.sort_by_key(|rec| rec.id);
         records
+    }
+    fn next_id(&self) -> i64 {
+        let mut ids: Vec<_> = self.list.keys().collect();
+        ids.sort();
+
+        match ids.pop() {
+            Some(id) => id + 1,
+            None => 1,
+        }
     }
 }
 
@@ -79,6 +93,26 @@ fn parse_records(records: String, verbose: bool) -> Records {
     recs
 }
 
+fn save_records(file_name: PathBuf, records: Records) -> std::io::Result<()> {
+    let mut file = OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(file_name)?;
+    file.write(b"id,name,email\n")?;
+
+    for record in records.into_vec().into_iter() {
+        let email = match record.email {
+            Some(email) => email,
+            None => "".to_string(),
+        };
+
+        let line = format!("{},{},{}\n", record.id, record.name, email);
+        file.write(line.as_bytes())?;
+    }
+    file.flush()?;
+    Ok(())
+}
+
 fn load_records(input_file: PathBuf, verbose: bool) -> std::io::Result<Records> {
     let mut file = File::open(input_file)?;
 
@@ -101,10 +135,25 @@ struct Opt {
 #[derive(StructOpt, Debug)]
 enum Command {
     List {},
+    Add {
+        name: String,
+        #[structopt(short)]
+        email: Option<String>,
+    },
 }
 
 fn run(opt: Opt) -> Result<(), std::io::Error> {
     match opt.cmd {
+        Command::Add { name, email } => {
+            let mut recs = load_records(opt.data_file.clone(), opt.verbose)?;
+            let next_id = recs.next_id();
+            recs.add(Record {
+                id: next_id,
+                name,
+                email,
+            });
+            save_records(opt.data_file, recs)?;
+        }
         Command::List { .. } => {
             let recs = load_records(opt.data_file, opt.verbose)?;
             for record in recs.into_vec() {
