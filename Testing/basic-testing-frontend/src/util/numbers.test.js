@@ -25,5 +25,13 @@ describe("transformToNumber()", () => {
 
       expect(cleanedNumbers[0]).toBeTypeOf("number");
     });
+
+    it("should throw an error if an array with empty strings provided", () => {
+      const numberValues = ["", 1];
+
+      const cleanFn = () => cleanNumbers(numberValues);
+
+      expect(cleanFn).toThrow();
+    });
   });
 });
