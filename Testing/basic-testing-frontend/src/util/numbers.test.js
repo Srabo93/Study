@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { transformToNumber } from "./numbers.js";
+import { cleanNumbers, transformToNumber } from "./numbers.js";
 
 describe("transformToNumber()", () => {
   it("should transform string to number", () => {
@@ -16,5 +16,14 @@ describe("transformToNumber()", () => {
     const result = transformToNumber(input);
 
     expect(result).toBeNaN();
+  });
+
+  describe("cleanNumbers()", () => {
+    it("should return an array ov number values if an array of string values is provided", () => {
+      const numberValues = ["1", "2"];
+      const cleanedNumbers = cleanNumbers(numberValues);
+
+      expect(cleanedNumbers[0]).toBeTypeOf("number");
+    });
   });
 });
