@@ -70,6 +70,45 @@ var mathHomework = Object.create(homework);
 mathHomework.topic = "Math";
 mathHomework.study(); // Please study Math
 
+/*
+ * Using 'Object.create' to initialize an Object with the __proto__ linkage
+  */
+function userCreator(name, score) {
+
+  var newUser = Object.create(userStoreFunctions)
+  newUser.name = name;
+  newUser.score = score;
+
+  return newUser
+}
+
+/*
+ * Creating an Object that holds functionalities that will be linked via __proto__
+ * */
+var userStoreFunctions = {
+  increment: function () {
+    this.score++
+  },
+  login: function () {
+    console.log('Logging in')
+  }
+}
+
+var user1 = userCreator('Max',5)
+user1.increment()
+user1.login()
+console.log(user1) // score = 6 , logs 'Logging in'
+
+/*Functions are also Objects,when used as Objects they automatically have the 'prototype' property, this comes into play when using 'new' keyword  */
+function funcAndObj(num){
+  return num
+}
+
+funcAndObj.stored = 5;
+console.log(funcAndObj(59))
+console.log(funcAndObj.stored)
+console.log(funcAndObj.prototype)
+
 /**
  * Classes are prototypes in the background
  */
