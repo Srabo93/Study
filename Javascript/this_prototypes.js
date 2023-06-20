@@ -8,9 +8,7 @@ function classroom(teacher) {
 }
 var assignment = classroom("Kyle"); // 'Kyle says to study undefined'
 
-/**
- * Now we provide context that can utilize this 'this-aware function'
- */
+// Now we provide context that can utilize this 'this-aware function'
 var homework = {
   topic: "JS",
   assignment: assignment,
@@ -53,9 +51,7 @@ otherHomework.topic; // "Math"
 
 homework.topic; // "JS" -- not "Math"
 
-/**
- * Now throwing the 'this' dynamic context to prototype linkage
- */
+//  Now throwing the 'this' dynamic context to prototype linkage
 var homework = {
   study() {
     console.log(`Please study ${this.topic}`);
@@ -70,44 +66,39 @@ var mathHomework = Object.create(homework);
 mathHomework.topic = "Math";
 mathHomework.study(); // Please study Math
 
-/*
- * Using 'Object.create' to initialize an Object with the __proto__ linkage
-  */
+// Using 'Object.create' to initialize an Object with the __proto__ linkage
 function userCreator(name, score) {
-
-  var newUser = Object.create(userStoreFunctions)
+  var newUser = Object.create(userStoreFunctions);
   newUser.name = name;
   newUser.score = score;
 
-  return newUser
+  return newUser;
 }
 
-/*
- * Creating an Object that holds functionalities that will be linked via __proto__
- * */
+// Creating an Object that holds functionalities that will be linked via __proto__
 var userStoreFunctions = {
-  increment: function () {
-    this.score++
+  increment: function() {
+    this.score++;
   },
-  login: function () {
-    console.log('Logging in')
-  }
-}
+  login: function() {
+    console.log("Logging in");
+  },
+};
 
-var user1 = userCreator('Max',5)
-user1.increment()
-user1.login()
-console.log(user1) // score = 6 , logs 'Logging in'
+var user1 = userCreator("Max", 5);
+user1.increment();
+user1.login();
+console.log(user1); // score = 6 , logs 'Logging in'
 
 /*Functions are also Objects,when used as Objects they automatically have the 'prototype' property, this comes into play when using 'new' keyword  */
-function funcAndObj(num){
-  return num
+function funcAndObj(num) {
+  return num;
 }
 
 funcAndObj.stored = 5;
-console.log(funcAndObj(59))
-console.log(funcAndObj.stored)
-console.log(funcAndObj.prototype)
+console.log(funcAndObj(59)); // 59
+console.log(funcAndObj.stored); // 5
+console.log(funcAndObj.prototype); // {}
 
 /**
  * Classes are prototypes in the background
@@ -126,9 +117,7 @@ var mathClass = new Classroom();
 
 mathClass.welcome(); // Welcome, students!
 
-/**
- * class definition under the hood with prototype linkage
- */
+// Class definition under the hood with prototype linkage
 var Classroom = {
   welcome() {
     console.log("Welcome, students!");
@@ -139,9 +128,7 @@ var mathClass = Object.create(Classroom);
 
 mathClass.welcome(); // Welcome, students!
 
-/**
- * The prototype classpattern would look like following
- */
+// The prototype classpattern would look like following (using the 'new' keyword)
 function Classroom() {
   // ..
 }
@@ -153,3 +140,17 @@ Classroom.prototype.welcome = function hello() {
 var mathClass = new Classroom();
 
 mathClass.welcome(); // Welcome, students!
+
+// The prototype classpattern would look like following (without the 'new' keyword)
+function Classroom() {
+  var newRoom = Object.create(hello); // 'new' keyword creates and returns an object for us
+
+  return newRoom;
+}
+
+function hello() {
+  console.log("Welcome, students!");
+}
+
+var mathClass = Classroom();
+mathClass.welcome();
