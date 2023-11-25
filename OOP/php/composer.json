@@ -1,0 +1,17 @@
+{
+    "name": "armin/php",
+    "description": "OOP Design Patterns",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Armin\\Php\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Srabo93",
+            "email": "a.s-dev@web.de"
+        }
+    ],
+    "require": {}
+}
