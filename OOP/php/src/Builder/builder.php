@@ -15,3 +15,8 @@ function clientCode(SQLQueryBuilder $queryBuilder)
 echo "Testing MySQL query builder: \n";
 
 clientCode(new MysqlQueryBuilder());
+
+echo"\n\n";
+
+echo "Testing PostgresSQL query builder:\n";
+clientCode(new PostgresQueryBuilder());
