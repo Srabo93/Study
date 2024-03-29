@@ -16,7 +16,7 @@ class CarManualBuilder implements Builder
     }
     public function setEngine(Engine $engine): void
     {
-        $this->manual->engine = $engine;
+        $this->manual->engine = $engine->sound();
     }
     public function setTripComputer(): void
     {

@@ -16,7 +16,7 @@ class CarBuilder implements Builder
     }
     public function setEngine(Engine $engine): void
     {
-        $this->car->engine = $engine;
+        $this->car->engine = $engine->sound();
     }
     public function setTripComputer(): void
     {
